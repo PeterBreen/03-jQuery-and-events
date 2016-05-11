@@ -57,7 +57,16 @@ articleView.handleCategoryFilter = function() {
   //       is selected, hide all the articles, then reveal the matches.
   //       When the blank (default) option is selected, show all the articles,
   //       except for the template. Be sure to reset the #author-filter while you are at it!
-
+  $('#category-filter').on('change', function() {
+    if ($(this).val()) {
+      $('article').hide();
+      $('[data-category="' + $(this).val() + '"]').fadeIn();
+    } else {
+      $('article').show();
+      $('.template').hide();
+    }
+    $('#author-filter').val('');
+  });
 };
 
 articleView.handleMainNav = function() {
@@ -70,7 +79,11 @@ articleView.handleMainNav = function() {
   //         You may need to dynamically build a selector string (concatenation???)
   //          with the correct ID, based on the data available to you on the .tab
   //          element that was clicked.
-  $('.main-nav').on(/* CODE GOES HERE */);
+  $('.main-nav').on('click', '.tab', function (e) {
+    e.preventDefault();
+    $('.tab-content').hide();
+    $('[id="' + $(this).attr('data-content') + '"]').show();
+  });
 
   // Let's now trigger a click on the first .tab element, to set up the page:
   $('.main-nav .tab:first').click();
@@ -82,18 +95,32 @@ articleView.setTeasers = function() {
   $('.article-body *:nth-of-type(n+2)').hide();
 
   // TODO: Add a delegated event handler to reveal the remaining paragraph.
+  $('article').on('click', '.read-on', function(e) {
   //       When a .read-on link is clicked, we can:
   //        1. Prevent the default action of a link (to navigate away from the page).
+    e.preventDefault();
   //        2. Reveal everything in that particular article now.
+    $(this).siblings('.article-body').children().show();
   //        3. Hide that read-on link!
+    $(this).html('&larr; Show Less').toggleClass('show-less');
+  });
+
   //       Ideally, we should attach this as just 1 event handler
   //       on the #articles section, and let it process any .read-on clicks that
   //       happen.
   // STRETCH GOAL!: change the read more link to 'show less.'
+  $('article').on('click', '.show-less', function(e) {
+    e.preventDefault();
+    $(this).siblings('.article-body').children('*:nth-of-type(n+2)').hide();
+    $(this).html('Read On &rarr;').toggleClass('show-less');
+  });
 };
 
 // TODO: Call all of the above functions, once we are sure the DOM is ready.
 $(document).ready(function(){
   articleView.populateFilters();
   articleView.handleAuthorFilter();
+  articleView.handleCategoryFilter();
+  articleView.handleMainNav();
+  articleView.setTeasers();
 });
