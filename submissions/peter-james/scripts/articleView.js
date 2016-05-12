@@ -102,7 +102,7 @@ articleView.setTeasers = function() {
   //        2. Reveal everything in that particular article now.
     $(this).siblings('.article-body').children().show();
   //        3. Hide that read-on link!
-    $(this).html('&larr; Show Less').toggleClass('show-less');
+    $(this).html('&larr; Show Less').toggleClass('show-less read-on');
   });
 
   //       Ideally, we should attach this as just 1 event handler
@@ -112,7 +112,7 @@ articleView.setTeasers = function() {
   $('article').on('click', '.show-less', function(e) {
     e.preventDefault();
     $(this).siblings('.article-body').children('*:nth-of-type(n+2)').hide();
-    $(this).html('Read On &rarr;').toggleClass('show-less');
+    $(this).html('Read On &rarr;').toggleClass('show-less read-on');
   });
 };
 
